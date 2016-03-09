@@ -2,13 +2,13 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>org.ict4h.openmrs</groupId>
+	<groupId>org.opensrp</groupId>
 	<artifactId>openmrs-atomfeed</artifactId>
 	<version>2.5.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>AtomFeed Module</name>
 	<description>Atomfeed publisher and consumer for OpenMRS.</description>
-	<url>https://github.com/ICT4H/openmrs-atomfeed</url>
+	<url>https://github.com/opensrp/openmrs-atomfeed</url>
 
     <parent>
         <groupId>org.sonatype.oss</groupId>
@@ -24,9 +24,9 @@
     </licenses>
 
     <scm>
-        <url>https://github.com/ICT4H/openmrs-atomfeed</url>
-        <connection>scm:git:git@github.com:ICT4H/openmrs-atomfeed.git</connection>
-        <developerConnection>scm:git:git@github.com:ICT4H/openmrs-atomfeed.git</developerConnection>
+        <url>https://github.com/opensrp/openmrs-atomfeed</url>
+        <connection>scm:git:git@github.com:opensrp/openmrs-atomfeed.git</connection>
+        <developerConnection>scm:git:git@github.com:opensrp/openmrs-atomfeed.git</developerConnection>
         <tag>HEAD</tag>
     </scm>
 

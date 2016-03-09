@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>org.ict4h.openmrs</groupId>
+		<groupId>org.opensrp</groupId>
 		<artifactId>openmrs-atomfeed</artifactId>
 		<version>2.5.1-SNAPSHOT</version>
 	</parent>
@@ -53,7 +53,7 @@
 		</dependency>
 
         <dependency>
-            <groupId>org.ict4h.openmrs</groupId>
+            <groupId>${project.parent.groupId}</groupId>
             <artifactId>openmrs-atomfeed-common</artifactId>
             <version>${project.parent.version}</version>
             <type>jar</type>

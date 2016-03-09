@@ -26,7 +26,7 @@
     </advice>
 
     <advice>
-        <point>org.openmrs.module.emrapi.encounter.EmrEncounterService</point>
+        <point>org.openmrs.api.EncounterService</point>
         <class>org.openmrs.module.atomfeed.advice.EncounterSaveAdvice</class>
     </advice>
 

@@ -29,7 +29,7 @@ public class EncounterSaveAdvice implements AfterReturningAdvice {
     public static final String CATEGORY = "Encounter";
     private final AtomFeedSpringTransactionManager atomFeedSpringTransactionManager;
 
-    private static final String SAVE_METHOD = "save";
+    private static final String SAVE_METHOD = "saveEncounter";
 
     private EventService eventService;
 
@@ -42,12 +42,12 @@ public class EncounterSaveAdvice implements AfterReturningAdvice {
     }
 
     @Override
-    public void afterReturning(Object returnValue, Method method, Object[] args, Object emrEncounterService) throws Throwable {
+    public void afterReturning(Object returnValue, Method method, Object[] args, Object encounterService) throws Throwable {
         if (method.getName().equals(SAVE_METHOD)) {
-            Object encounterUuid = PropertyUtils.getProperty(returnValue, "encounterUuid");
+            Object encounterUuid = PropertyUtils.getProperty(returnValue, "uuid");
             String url = String.format(ENCOUNTER_REST_URL, encounterUuid);
             final Event event = new Event(UUID.randomUUID().toString(), TITLE, DateTime.now(), (URI) null, url, CATEGORY);
-            if (EventPublishFilterHook.shouldPublish(returnValue, args, "EncounterPublishCondition.groovy")) {
+//            if (EventPublishFilterHook.shouldPublish(returnValue, args, "EncounterPublishCondition.groovy")) {
                 atomFeedSpringTransactionManager.executeWithTransaction(
                         new AFTransactionWorkWithoutResult() {
                             @Override
@@ -61,7 +61,7 @@ public class EncounterSaveAdvice implements AfterReturningAdvice {
                             }
                         }
                 );
-            }
+//            }
         }
     }
 
