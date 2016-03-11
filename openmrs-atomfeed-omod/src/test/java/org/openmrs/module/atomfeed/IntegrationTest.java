@@ -1,5 +1,7 @@
 package org.openmrs.module.atomfeed;
 
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -30,7 +32,7 @@ import liquibase.database.jvm.JdbcConnection;
 import liquibase.exception.LiquibaseException;
 import liquibase.resource.ClassLoaderResourceAccessor;
 
-public class SpikeTest extends BaseModuleWebContextSensitiveTest {
+public class IntegrationTest extends BaseModuleWebContextSensitiveTest {
 
 	@Autowired
 	EncounterService encounterService;
@@ -40,21 +42,6 @@ public class SpikeTest extends BaseModuleWebContextSensitiveTest {
 
 	@Autowired
 	AtomFeedController atomFeedController;
-
-//	@Before
-//	public void setUp() throws Exception {
-//		Connection connection = getConnection();
-//		Database liqubaseConnection = DatabaseFactory.getInstance().findCorrectDatabaseImplementation(
-//				new JdbcConnection(connection));
-//		liqubaseConnection.setDatabaseChangeLogTableName("LIQUIBASECHANGELOG");
-//		liqubaseConnection.setDatabaseChangeLogLockTableName("LIQUIBASECHANGELOGLOCK");
-//
-//		Liquibase liquibase = new Liquibase("liquibase.xml", new ClassLoaderResourceAccessor(getClass()
-//				.getClassLoader()), liqubaseConnection);
-//		liquibase.update(null);
-//
-//		connection.commit();
-//	}
 
 	@Before
 	public void setUp() throws Exception {
@@ -108,6 +95,9 @@ public class SpikeTest extends BaseModuleWebContextSensitiveTest {
 
 	@Test
 	public void testEverything() throws Exception {
+		List<List<Object>> rows = Context.getAdministrationService().executeSQL("select * from event_records_queue", true);
+		assertThat(rows.size(), is(0));
+
 		Encounter encounter = encounterService.getEncounter(5);
 		encounter.setEncounterDatetime(new Date());
 		encounterService.saveEncounter(encounter);
@@ -121,19 +111,8 @@ public class SpikeTest extends BaseModuleWebContextSensitiveTest {
 		HttpServletRequest request = mock(HttpServletRequest.class);
 		when(request.getRequestURL()).thenReturn(url);
 
-		List<List<Object>> rows = Context.getAdministrationService().executeSQL("select * from event_records_queue", true);
-		for (List<Object> row : rows) {
-			for (Object o : row) {
-				System.out.print(o);
-				System.out.print("\t");
-			}
-
-			System.out.println("");
-		}
-
-//		String feed = atomFeedController.getRecentEventFeedForCategory(request, "Patient");
-//		System.out.println("Feed:");
-//		System.out.println(feed);
+		rows = Context.getAdministrationService().executeSQL("select * from event_records_queue", true);
+		assertThat(rows.size(), is(2));
 	}
 
 }

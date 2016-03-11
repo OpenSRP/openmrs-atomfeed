@@ -50,7 +50,7 @@
         <comment>Adding global property for encounter feed publish url</comment>
         <insert tableName="global_property">
             <column name="property" value="encounter.feed.publish.url"/>
-            <column name="property_value" value="/openmrs/ws/rest/emrapi/encounter/%s?includeAll=true"/>
+            <column name="property_value" value="/openmrs/ws/rest/v1/encounter/%s?v=full"/>
             <column name="uuid" valueComputed="UUID()"/>
             <column name="description" value="Url to be published on encounter save."/>
         </insert>
