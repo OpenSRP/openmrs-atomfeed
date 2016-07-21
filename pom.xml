@@ -4,7 +4,7 @@
 
 	<groupId>org.opensrp</groupId>
 	<artifactId>openmrs-atomfeed</artifactId>
-	<version>2.5.1-SNAPSHOT</version>
+	<version>3.0.0a</version>
 	<packaging>pom</packaging>
 	<name>AtomFeed Module</name>
 	<description>Atomfeed publisher and consumer for OpenMRS.</description>
@@ -46,7 +46,7 @@
 	</modules>
 	
 	<properties>
-		<openMRSVersion>1.9.2</openMRSVersion>
+		<openMRSVersion>1.9.7</openMRSVersion>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <atomfeed.version>1.9.1</atomfeed.version>
 	</properties>
