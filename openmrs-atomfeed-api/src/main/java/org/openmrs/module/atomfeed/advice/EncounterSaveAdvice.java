@@ -26,10 +26,10 @@ public class EncounterSaveAdvice implements AfterReturningAdvice {
     public static final String ENCOUNTER_REST_URL = getEncounterFeedUrl();
 
     public static final String TITLE = "Encounter";
-    public static final String CATEGORY = "Encounter";
+    public static final String CATEGORY = "OpenSRP_Encounter";
     private final AtomFeedSpringTransactionManager atomFeedSpringTransactionManager;
 
-    private static final String SAVE_METHOD = "saveEncounter";
+    private static final String SAVE_METHOD = "saveEncounter_rrrrrr";//TODO
 
     private EventService eventService;
 
@@ -66,7 +66,7 @@ public class EncounterSaveAdvice implements AfterReturningAdvice {
     }
 
     private static String getEncounterFeedUrl() {
-        return Context.getAdministrationService().getGlobalProperty("encounter.feed.publish.url");
+        return Context.getAdministrationService().getGlobalProperty("atomfeed.encounter.feed.publish.url");
     }
 
     private PlatformTransactionManager getSpringPlatformTransactionManager() {
