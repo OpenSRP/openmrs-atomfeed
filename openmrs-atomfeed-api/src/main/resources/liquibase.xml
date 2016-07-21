@@ -58,18 +58,23 @@
     <changeSet author="maimoonak" id="opensrp-atomfeed-20160719-4">
         <preConditions onFail="MARK_RAN">
             <sqlCheck expectedResult="0">
-                SELECT COUNT(*) FROM global_property where property = 'encounter.feed.publish.url'
+                SELECT COUNT(*) FROM global_property where property = 'atomfeed.encounter.feed.publish.url'
             </sqlCheck>
         </preConditions>
         <comment>Adding global property for encounter feed publish url</comment>
         <insert tableName="global_property">
-            <column name="property" value="encounter.feed.publish.url"/>
+            <column name="property" value="atomfeed.encounter.feed.publish.url"/>
             <column name="property_value" value="/openmrs/ws/rest/v1/encounter/%s?v=FULL"/>
             <column name="uuid" valueComputed="UUID()"/>
             <column name="description" value="Url to be published on encounter save."/>
         </insert>
     </changeSet>
     <changeSet id="opensrp-atomfeed-20160719-5" author="Hemanth">
+        <preConditions onFail="MARK_RAN">
+		  <not>
+		    <tableExists tableName="event_records_queue"/>
+		  </not>
+		</preConditions>
         <createTable tableName="event_records_queue">
             <column name="id" type="int" autoIncrement="true">
                 <constraints nullable="false" primaryKey="true"/>
