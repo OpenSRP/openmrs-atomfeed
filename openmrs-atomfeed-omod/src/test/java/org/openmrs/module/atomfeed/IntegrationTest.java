@@ -14,7 +14,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts.mock.MockHttpServletRequest;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.openmrs.Encounter;
@@ -87,18 +86,16 @@ public class IntegrationTest extends BaseModuleWebContextSensitiveTest {
 		Context.getAdministrationService().executeSQL("INSERT INTO chunking_history (chunk_length, start)"
 				+ " values (5, 1)", false);
 
-		Context.getAdministrationService().setGlobalProperty("atomfeed.encounter.feed.publish.url",
+		Context.getAdministrationService().setGlobalProperty("encounter.feed.publish.url",
 				"/openmrs/ws/rest/v1/encounter/%s");
 
 		Context.addAdvice(EncounterService.class, new org.openmrs.module.atomfeed.advice.EncounterSaveAdvice());
 		Context.addAdvice(PatientService.class, new org.openmrs.module.atomfeed.advice.PatientAdvice());
 	}
 
-	// TODO 
 	@Test
 	public void testEverything() throws Exception {
-		/*Stopped working after adding hasOpenSRPID check
-		 * List<List<Object>> rows = Context.getAdministrationService().executeSQL("select * from event_records_queue", true);
+		List<List<Object>> rows = Context.getAdministrationService().executeSQL("select * from event_records_queue", true);
 		assertThat(rows.size(), is(0));
 
 		Encounter encounter = encounterService.getEncounter(5);
@@ -115,7 +112,7 @@ public class IntegrationTest extends BaseModuleWebContextSensitiveTest {
 		when(request.getRequestURL()).thenReturn(url);
 
 		rows = Context.getAdministrationService().executeSQL("select * from event_records_queue", true);
-		assertThat(rows.size(), is(2));*/
+		assertThat(rows.size(), is(2));
 	}
 
 }
