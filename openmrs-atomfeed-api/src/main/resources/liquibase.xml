@@ -4,9 +4,14 @@
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
          http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
-    <changeSet author="ict4h" id="org.ict4h.openmrs-atomfeed-2013-03-01-18:30">
+    <changeSet author="maimoonak" id="opensrp-atomfeed-20160719-1">
+        <preConditions onFail="MARK_RAN">
+		  <not>
+		    <tableExists tableName="event_records"/>
+		  </not>
+		</preConditions>
         <createTable tableName="event_records">
-            <column name="id" type="serial">
+            <column name="id" type="int" autoIncrement="true">
                 <constraints nullable="false" primaryKey="true"/>
             </column>
             <column name="uuid" type="varchar(40)"/>
@@ -16,9 +21,17 @@
             <!-- Change to CLOB -->
             <column name="object" type="varchar(1000)"/>
             <column name="category" type="varchar(255)"/>
+            <column name="date_created" type="TIMESTAMP" />
         </createTable>
+    </changeSet>
+    <changeSet author="maimoonak" id="opensrp-atomfeed-20160719-2">
+        <preConditions onFail="MARK_RAN">
+		  <not>
+		    <tableExists tableName="chunking_history"/>
+		  </not>
+		</preConditions>
         <createTable tableName="chunking_history">
-            <column name="id" type="serial">
+            <column name="id" type="int" autoIncrement="true">
                 <constraints nullable="false" primaryKey="true"/>
             </column>
             <column name="chunk_length" type="BIGINT"/>
@@ -26,12 +39,13 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
-        <modifyDataType tableName="chunking_history" columnName="id" newDataType="int"/>
-        <addAutoIncrement tableName="chunking_history" columnName="id" columnDataType="int"/>
-        <modifyDataType tableName="event_records" columnName="id" newDataType="int"/>
-        <addAutoIncrement tableName="event_records" columnName="id" columnDataType="int"/>
     </changeSet>
-    <changeSet author="ict4h" id="org.ict4h.openmrs-atomfeed-2014-01-02-00:00">
+    <changeSet author="maimoonak" id="opensrp-atomfeed-20160719-3">
+        <preConditions onFail="MARK_RAN">
+		  <not>
+		    <tableExists tableName="event_records_offset_marker"/>
+		  </not>
+		</preConditions>
         <createTable tableName="event_records_offset_marker">
             <column name="id" type="int" autoIncrement="true">
                 <constraints nullable="false" primaryKey="true"/>
@@ -41,21 +55,12 @@
             <column name="category" type="varchar(255)"/>
         </createTable>
     </changeSet>
-    <changeSet author="Chethan, Banka" id="org.ict4h.openmrs-atomfeed-2014-06-10-14:22">
+    <changeSet id="opensrp-atomfeed-20160719-5" author="Hemanth">
         <preConditions onFail="MARK_RAN">
-            <sqlCheck expectedResult="0">
-                SELECT COUNT(*) FROM global_property where property = 'encounter.feed.publish.url'
-            </sqlCheck>
-        </preConditions>
-        <comment>Adding global property for encounter feed publish url</comment>
-        <insert tableName="global_property">
-            <column name="property" value="encounter.feed.publish.url"/>
-            <column name="property_value" value="/openmrs/ws/rest/v1/encounter/%s?v=full"/>
-            <column name="uuid" valueComputed="UUID()"/>
-            <column name="description" value="Url to be published on encounter save."/>
-        </insert>
-    </changeSet>
-    <changeSet id="17092015053645" author="Hemanth">
+		  <not>
+		    <tableExists tableName="event_records_queue"/>
+		  </not>
+		</preConditions>
         <createTable tableName="event_records_queue">
             <column name="id" type="int" autoIncrement="true">
                 <constraints nullable="false" primaryKey="true"/>
@@ -69,7 +74,7 @@
             <column name="category" type="varchar(255)"/>
         </createTable>
     </changeSet>
-    <changeSet id="openmrs-atomfeed-offset-marker-20150909122334" author="tw">
+    <changeSet id="opensrp-atomfeed-20160719-6" author="tw">
         <insert tableName="scheduler_task_config">
             <column name="name" value="OpenMRS event publisher task"/>
             <column name="schedulable_class" value="org.openmrs.module.atomfeed.scheduler.tasks.EventPublisherTask"/>
@@ -83,20 +88,7 @@
             <column name="uuid" valueComputed=" uuid() "/>
         </insert>
     </changeSet>
-
-    <changeSet id="20160119-1146" context="setup" author="Shashi, Hanisha">
-        <preConditions onFail="MARK_RAN">
-            <not>
-                <columnExists columnName="date_created" tableName="event_records"/>
-            </not>
-        </preConditions>
-        <comment>Creating column date_created for queue table. This indicates the time event was raised or created.</comment>
-        <addColumn tableName="event_records">
-            <column name="date_created" type="TIMESTAMP"/>
-        </addColumn>
-    </changeSet>
-
-    <changeSet id="bahmni-core-201411061606" author="Vinay, Mihir">
+    <changeSet id="opensrp-atomfeed-20160719-7" author="Vinay, Mihir">
         <preConditions onFail="MARK_RAN">
             <sqlCheck expectedResult="0">select count(*) from chunking_history;</sqlCheck>
         </preConditions>
@@ -107,4 +99,22 @@
         </insert>
     </changeSet>
 
+	<changeSet id="opensrp-atomfeed-20160721-1" author="maimoonak">
+	    <preConditions onFail="MARK_RAN">
+		  <not>
+		    <tableExists tableName="event_records_extras"/>
+		  </not>
+		</preConditions>
+        <createTable tableName="event_records_extras">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="event_uuid" type="varchar(40)"/>
+            <column name="uuid" type="varchar(40)"/>
+            <column name="name" type="varchar(255)"/>
+            <column name="value" type="varchar(1000)"/>
+            <column name="timestamp" type="TIMESTAMP" defaultValueDate="CURRENT_TIMESTAMP"/>
+        </createTable>
+    </changeSet>
+	
 </databaseChangeLog>

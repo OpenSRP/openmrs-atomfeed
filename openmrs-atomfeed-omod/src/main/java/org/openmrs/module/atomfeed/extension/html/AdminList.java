@@ -45,6 +45,7 @@ public class AdminList extends AdministrationSectionExt {
 	public Map<String, String> getLinks() {
 		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
 		map.put("/module/atomfeed/manage.form", "atomfeed.manage");
+		map.put("/module/atomfeed/configure.form", "Configure");
 		return map;
 	}
 	

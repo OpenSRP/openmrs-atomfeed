@@ -49,5 +49,20 @@
 	</messages>
 	<!-- /Internationalization -->
 
+	<globalProperty>
+		<property>atomfeed.data-update.data-entry.roles-to-ignore</property>
+		<defaultValue>opensrp-rest-service</defaultValue>
+		<description>
+			Any data created by user having mentioned roles (comma separated list) would be ignored during creating atomfeeds for Patient Update. 
+		</description>
+	</globalProperty>
+	
+	<globalProperty>
+		<property>atomfeed.encounter.feed.publish.url</property>
+		<defaultValue>/openmrs/ws/rest/v1/encounter/%s?v=full</defaultValue>
+		<description>
+		    Url to be published on encounter save
+		</description>
+	</globalProperty>
 </module>
 

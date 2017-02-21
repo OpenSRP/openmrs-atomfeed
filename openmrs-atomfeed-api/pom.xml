@@ -3,11 +3,11 @@
 
 	<parent>
 		<groupId>org.opensrp</groupId>
-		<artifactId>openmrs-atomfeed</artifactId>
-		<version>2.5.1-SNAPSHOT</version>
+		<artifactId>atomfeed</artifactId>
+		<version>3.0.1</version>
 	</parent>
 
-	<artifactId>openmrs-atomfeed-api</artifactId>
+	<artifactId>atomfeed-api</artifactId>
 	<packaging>jar</packaging>
 	<name>AtomFeed Module API</name>
 	<description>API project for AtomFeed</description>
@@ -54,7 +54,7 @@
 
         <dependency>
             <groupId>${project.parent.groupId}</groupId>
-            <artifactId>openmrs-atomfeed-common</artifactId>
+            <artifactId>atomfeed-common</artifactId>
             <version>${project.parent.version}</version>
             <type>jar</type>
         </dependency>

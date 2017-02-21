@@ -69,6 +69,7 @@ public class AtomFeedController {
         String restUri = Context.getAdministrationService().getGlobalProperty("webservices.rest.uriPrefix");
         if (restUri != null)
             return addPathToUrl(restUri, request.getRequestURI(), request.getQueryString());
+		return null;
     }
 
     private String getServiceUriFromRequest(HttpServletRequest request) {
