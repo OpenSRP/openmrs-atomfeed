@@ -6,8 +6,8 @@
 	<artifactId>atomfeed</artifactId>
 	<version>3.0.1</version>
 	<packaging>pom</packaging>
-	<name>AtomFeed Module</name>
-	<description>Atomfeed publisher and consumer for OpenMRS.</description>
+	<name>OpenSRP AtomFeed Module</name>
+	<description>Atomfeed publisher and consumer for OpenMRS to be consumed by OpenSRP or any other system.</description>
 	<url>https://github.com/opensrp/openmrs-atomfeed</url>
 
     <parent>

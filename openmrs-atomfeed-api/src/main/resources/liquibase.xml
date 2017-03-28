@@ -116,5 +116,14 @@
             <column name="timestamp" type="TIMESTAMP" defaultValueDate="CURRENT_TIMESTAMP"/>
         </createTable>
     </changeSet>
+    <changeSet id="opensrp-atomfeed-20170228-1" author="maimoonak">
+    <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">select count(*) from role where role='opensrp-rest-service';</sqlCheck>
+        </preConditions>
+        <comment>Create opensrp-rest-service default role</comment>
+        <sql>
+            insert into role (role, description, uuid) values ('opensrp-rest-service', 'Default role for OpenSRP REST Service',uuid());
+        </sql>
+	</changeSet>
 	
 </databaseChangeLog>
