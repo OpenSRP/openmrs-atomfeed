@@ -24,7 +24,10 @@
         <point>org.openmrs.api.PatientService</point>
         <class>org.openmrs.module.atomfeed.advice.PatientAdvice</class>
     </advice>
-
+    <advice>
+        <point>org.openmrs.api.OrderService</point>
+        <class>org.openmrs.module.atomfeed.advice.DrugOrderAdvice</class>
+    </advice>
     <advice>
         <point>org.openmrs.api.EncounterService</point>
         <class>org.openmrs.module.atomfeed.advice.EncounterSaveAdvice</class>
