@@ -104,6 +104,9 @@ public class EncounterSaveAdvice implements AfterReturningAdvice, MethodBeforeAd
 	}
 
     private void process(Encounter encounter, String title, final String dataEnrySource) {
+    	if(encounter == null){
+			return;
+		}
 		String contents = String.format(ENCOUNTER_REST_URL, encounter.getUuid());
         final Event event = new Event(UUID.randomUUID().toString(), title, DateTime.now(), (URI) null, contents, CATEGORY);
         atomFeedSpringTransactionManager.executeWithTransaction(

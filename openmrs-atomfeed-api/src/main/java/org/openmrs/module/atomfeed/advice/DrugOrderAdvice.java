@@ -21,6 +21,7 @@ import org.ict4h.atomfeed.server.service.EventService;
 import org.ict4h.atomfeed.server.service.EventServiceImpl;
 import org.ict4h.atomfeed.transaction.AFTransactionWorkWithoutResult;
 import org.joda.time.DateTime;
+import org.openmrs.DrugOrder;
 import org.openmrs.Order;
 import org.openmrs.User;
 import org.openmrs.api.context.Context;
@@ -52,7 +53,13 @@ public class DrugOrderAdvice implements AfterReturningAdvice, MethodBeforeAdvice
     }
         
     @Override
-    public void afterReturning(Object returnValue, Method method, Object[] arguments, Object target) throws Throwable {
+    public void afterReturning(Object returnValue, Method method, Object[] args, Object target) throws Throwable {
+		Order o = args.length>0&&args[0] instanceof Order?(Order)args[0]:null;
+
+		if(isDrugOrder == false){// checking for drug order again; it doesnot get populated earlier
+    		isDrugOrder = isDrugOrder(o);
+    	}
+    	
     	if (method.getName().equals(SAVE_METHOD) && isDrugOrder) {
     		logDebug("In method SAVE_DRUG_ORDER for atomfeed with isNewEntry="+isNewEntry);
     		
@@ -66,26 +73,48 @@ public class DrugOrderAdvice implements AfterReturningAdvice, MethodBeforeAdvice
         	
 	        if (isNewEntry == null) {
 				logWarn("DRUG_ORDER: Can not determine the transaction type. Data syncer Service should handle Save and Update on its own");
-				process((Order) returnValue, "Order", formatDataEntrySource(u));
+				process(o, "Order", formatDataEntrySource(u));
 	        }
 	        // if new entry and not sent from SRP i.e. skip entry sent via opensrp
 	        else if(isNewEntry){
 	        	logDebug("DRUG_ORDER: Insert found. Creating drug_order_save atomfeed for "+u);
-	        	process((Order) returnValue, "DrugOrder_Save", formatDataEntrySource(u));
+	        	process(o, "DrugOrder_Save", formatDataEntrySource(u));
 	        }
 	        // if not a new entry and no role for data edit found ignorable
 	        else if(isNewEntry == false){
         		logInfo("ORDER: Creating atomfeed for order_update for "+u);
-        		process((Order) returnValue, "DrugOrder_Update", formatDataEntrySource(u));	        		
+        		process(o, "DrugOrder_Update", formatDataEntrySource(u));	        		
 	        }            
         }
+    }
+    
+    private boolean isDrugOrder(Order o){
+    	boolean drugOrder = false;
+		if(o != null){
+			try{
+				if(o instanceof DrugOrder){
+					drugOrder = true;
+				}
+				else if(o.getOrderType() != null 
+						&& (o.getOrderType().getName().equalsIgnoreCase("drugorder")
+								|| o.getOrderType().getName().equalsIgnoreCase("drug order"))){
+					drugOrder = true;
+				}
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return drugOrder;
     }
     
 	@Override
 	public void before(Method method, Object[] args, Object target) throws Throwable {
 		Order o = args.length>0&&args[0] instanceof Order?(Order)args[0]:null;
-		isDrugOrder = o != null && ((Order) o).getOrderType().getName().equalsIgnoreCase("drugorder");
-		if (method.getName().equals(SAVE_METHOD) && isDrugOrder) {
+		
+		isDrugOrder = isDrugOrder(o);
+		
+		if (method.getName().equals(SAVE_METHOD)) {
     		logDebug("In method SAVE_DRUG_ORDER for atomfeed before advice");
 
 			if(o != null){
@@ -103,6 +132,9 @@ public class DrugOrderAdvice implements AfterReturningAdvice, MethodBeforeAdvice
 	}
     
 	private void process(Order order, String title, final String dataEnrySource) {
+		if(order == null){
+			return;
+		}
 		String contents = String.format(TEMPLATE, order.getUuid());
         final Event event = new Event(UUID.randomUUID().toString(), title, DateTime.now(), (URI) null, contents, CATEGORY);
         atomFeedSpringTransactionManager.executeWithTransaction(

@@ -101,6 +101,9 @@ public class PatientAdvice implements AfterReturningAdvice, MethodBeforeAdvice {
 	}
     
 	private void process(Patient patient, String title, final String dataEnrySource) {
+		if(patient == null){
+			return;
+		}
 		String contents = String.format(TEMPLATE, patient.getUuid());
         final Event event = new Event(UUID.randomUUID().toString(), title, DateTime.now(), (URI) null, contents, CATEGORY);
         atomFeedSpringTransactionManager.executeWithTransaction(
