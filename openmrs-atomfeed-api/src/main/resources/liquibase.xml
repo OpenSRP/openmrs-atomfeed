@@ -125,5 +125,24 @@
             insert into role (role, description, uuid) values ('opensrp-rest-service', 'Default role for OpenSRP REST Service',uuid());
         </sql>
 	</changeSet>
+	<changeSet id="opensrp-atomfeed-20170404-1" author="maimoonak">
+    	<preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">select count(*) from event_records where category LIKE 'opensrp%';</sqlCheck>
+        </preConditions>
+        <comment>Creating feeds for existing Patient, Encounter, DrugOrder data</comment>
+        <sql>
+INSERT INTO event_records(uuid, title, timestamp, uri, object, category, date_created) 
+SELECT UUID(), 'Patient_Migrate', NOW(), null, CONCAT('/openmrs/ws/rest/v1/patient/', pr.uuid,'?v=full'), 'OpenSRP_Patient',p.date_created 
+FROM patient p JOIN person pr ON pr.person_id=p.patient_id; 
+
+INSERT INTO event_records(uuid, title, timestamp, uri, object, category, date_created) 
+SELECT UUID(), 'Encounter_Migrate', NOW(), null, CONCAT('/openmrs/ws/rest/v1/encounter/', e.uuid,'?v=full'), 'OpenSRP_Encounter',e.date_created 
+FROM encounter e; 
+
+INSERT INTO event_records(uuid, title, timestamp, uri, object, category, date_created) 
+SELECT UUID(), 'DrugOrder_Migrate', NOW(), null, CONCAT('/openmrs/ws/rest/v1/order/', o.uuid,'?v=full'), 'OpenSRP_DrugOrder',o.date_created 
+FROM orders o JOIN order_type ot ON o.order_type_id=ot.order_type_id WHERE ot.name IN ('drug order', 'drug_order', 'drug-order', 'drugorder'); 
+        </sql>
+	</changeSet>
 	
 </databaseChangeLog>
