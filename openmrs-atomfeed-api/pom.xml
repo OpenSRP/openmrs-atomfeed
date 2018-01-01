@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>org.opensrp</groupId>
 		<artifactId>atomfeed</artifactId>
-		<version>3.1.1</version>
+		<version>3.2.1</version>
 	</parent>
 
 	<artifactId>atomfeed-api</artifactId>

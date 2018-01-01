@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>org.opensrp</groupId>
 		<artifactId>atomfeed</artifactId>
-		<version>3.1.1</version>
+		<version>3.2.1</version>
 	</parent>
 
     <scm>
@@ -26,12 +26,7 @@
 			<artifactId>atomfeed-api</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
-        <dependency>
-            <groupId>${project.parent.groupId}</groupId>
-            <artifactId>atomfeed-common</artifactId>
-            <version>${project.parent.version}</version>
-            <type>jar</type>
-        </dependency>
+
 		<dependency>
 			<groupId>org.openmrs.api</groupId>
 			<artifactId>openmrs-api</artifactId>
@@ -43,7 +38,7 @@
 			<artifactId>openmrs-web</artifactId>
 			<type>jar</type>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.openmrs.api</groupId>
 			<artifactId>openmrs-api</artifactId>
@@ -64,6 +59,14 @@
 			<type>pom</type>
 			<scope>test</scope>
 		</dependency>
+
+        <dependency>
+            <groupId>${project.parent.groupId}</groupId>
+            <artifactId>atomfeed-common</artifactId>
+            <version>${project.parent.version}</version>
+            <type>jar</type>
+        </dependency>
+
 	</dependencies>
 
 	<build>

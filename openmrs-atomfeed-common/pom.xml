@@ -4,7 +4,7 @@
     <parent>
         <groupId>org.opensrp</groupId>
         <artifactId>atomfeed</artifactId>
-        <version>3.1.1</version>
+        <version>3.2.1</version>
     </parent>
 
     <artifactId>atomfeed-common</artifactId>
@@ -14,8 +14,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <openMRSVersion>2.0.4</openMRSVersion>
-       <!--  <springVersion>4.1.4.RELEASE</springVersion>  -->
+        <springVersion>4.1.4.RELEASE</springVersion>
     </properties>
 
     <dependencies>
@@ -31,18 +30,6 @@
 		        </exclusion>
 		    </exclusions>
         </dependency>
-<!--         <dependency>
-            <groupId>org.openmrs.hibernate</groupId>
-            <artifactId>hibernate-core</artifactId>
-            <version>3.6.5.Final-mod</version>
-            <scope>provided</scope>
-        </dependency> 
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-beans</artifactId>
-            <version>${springVersion}</version>
-            <scope>provided</scope>
-        </dependency>-->
         <dependency>
             <groupId>org.openmrs.api</groupId>
             <artifactId>openmrs-api</artifactId>

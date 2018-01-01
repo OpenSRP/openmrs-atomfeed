@@ -1,37 +1,13 @@
 package org.openmrs.module.atomfeed;
 
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
-import java.io.IOException;
-import java.sql.Connection;
-import java.util.Date;
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.struts.mock.MockHttpServletRequest;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
-import org.mockito.Mockito;
-import org.openmrs.Encounter;
-import org.openmrs.Patient;
 import org.openmrs.api.EncounterService;
 import org.openmrs.api.PatientService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.atomfeed.web.controller.AtomFeedController;
 import org.openmrs.web.test.BaseModuleWebContextSensitiveTest;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import liquibase.Liquibase;
-import liquibase.database.Database;
-import liquibase.database.DatabaseFactory;
-import liquibase.database.jvm.JdbcConnection;
-import liquibase.exception.LiquibaseException;
-import liquibase.resource.ClassLoaderResourceAccessor;
 
 public class IntegrationTest extends BaseModuleWebContextSensitiveTest {
 
@@ -96,7 +72,8 @@ public class IntegrationTest extends BaseModuleWebContextSensitiveTest {
 
 	// TODO 
 	@Test
-	public void testEverything() throws Exception {
+	public void testEverything() {
+		System.out.println("not implemented yet");
 		/*Stopped working after adding hasOpenSRPID check
 		 * List<List<Object>> rows = Context.getAdministrationService().executeSQL("select * from event_records_queue", true);
 		assertThat(rows.size(), is(0));

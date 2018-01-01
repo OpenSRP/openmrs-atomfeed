@@ -88,7 +88,21 @@
             <column name="uuid" valueComputed=" uuid() "/>
         </insert>
     </changeSet>
-    <changeSet id="opensrp-atomfeed-20160719-7" author="Vinay, Mihir">
+
+    <changeSet id="20160119-1146" context="setup" author="Shashi, Hanisha">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists columnName="date_created" tableName="event_records"/>
+            </not>
+        </preConditions>
+        <comment>Creating column date_created for queue table. This indicates the time event was raised or created.</comment>
+        <addColumn tableName="event_records">
+            <column name="date_created" type="TIMESTAMP" defaultValueDate="CURRENT_TIMESTAMP"/>
+        </addColumn>
+    </changeSet>
+
+
+    <changeSet id="20160603-1739" author="angshu">
         <preConditions onFail="MARK_RAN">
             <sqlCheck expectedResult="0">select count(*) from chunking_history;</sqlCheck>
         </preConditions>
@@ -99,50 +113,88 @@
         </insert>
     </changeSet>
 
-	<changeSet id="opensrp-atomfeed-20160721-1" author="maimoonak">
-	    <preConditions onFail="MARK_RAN">
-		  <not>
-		    <tableExists tableName="event_records_extras"/>
-		  </not>
-		</preConditions>
-        <createTable tableName="event_records_extras">
-            <column name="id" type="int" autoIncrement="true">
-                <constraints nullable="false" primaryKey="true"/>
-            </column>
-            <column name="event_uuid" type="varchar(40)"/>
-            <column name="uuid" type="varchar(40)"/>
-            <column name="name" type="varchar(255)"/>
-            <column name="value" type="varchar(1000)"/>
-            <column name="timestamp" type="TIMESTAMP" defaultValueDate="CURRENT_TIMESTAMP"/>
-        </createTable>
+    <changeSet id="20160712-1977-1" author="Jaswanth/Sanjit">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*) FROM global_property where property = 'atomfeed.publish.eventsForPatientRelationshipChange'
+            </sqlCheck>
+        </preConditions>
+        <comment>Adding global property to act as switch for raising relationship events</comment>
+        <insert tableName="global_property">
+            <column name="property" value="atomfeed.publish.eventsForPatientRelationshipChange"/>
+            <column name="property_value" value=""/>
+            <column name="uuid" valueComputed="UUID()"/>
+            <column name="description" value="If set true, events related to relationship changes are published"/>
+        </insert>
     </changeSet>
-    <changeSet id="opensrp-atomfeed-20170228-1" author="maimoonak">
-    <preConditions onFail="MARK_RAN">
-            <sqlCheck expectedResult="0">select count(*) from role where role='opensrp-rest-service';</sqlCheck>
-        </preConditions>
-        <comment>Create opensrp-rest-service default role</comment>
-        <sql>
-            insert into role (role, description, uuid) values ('opensrp-rest-service', 'Default role for OpenSRP REST Service',uuid());
-        </sql>
-	</changeSet>
-	<changeSet id="opensrp-atomfeed-20170404-1" author="maimoonak">
-    	<preConditions onFail="MARK_RAN">
-            <sqlCheck expectedResult="0">select count(*) from event_records where category LIKE 'opensrp%';</sqlCheck>
-        </preConditions>
-        <comment>Creating feeds for existing Patient, Encounter, DrugOrder data</comment>
-        <sql>
-INSERT INTO event_records(uuid, title, timestamp, uri, object, category, date_created) 
-SELECT UUID(), 'Patient_Migrate', NOW(), null, CONCAT('/openmrs/ws/rest/v1/patient/', pr.uuid,'?v=full'), 'OpenSRP_Patient',p.date_created 
-FROM patient p JOIN person pr ON pr.person_id=p.patient_id; 
 
-INSERT INTO event_records(uuid, title, timestamp, uri, object, category, date_created) 
-SELECT UUID(), 'Encounter_Migrate', NOW(), null, CONCAT('/openmrs/ws/rest/v1/encounter/', e.uuid,'?v=full'), 'OpenSRP_Encounter',e.date_created 
-FROM encounter e; 
+    <changeSet id="20160712-1977-2" author="Jaswanth/Sanjit">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*) FROM global_property where property = 'atomfeed.event.urlPatternForPatientRelationshipChange'
+            </sqlCheck>
+        </preConditions>
+        <comment>Adding global property to specify the URL pattern for published relationship events</comment>
+        <insert tableName="global_property">
+            <column name="property" value="atomfeed.event.urlPatternForPatientRelationshipChange"/>
+            <column name="property_value" value=""/>
+            <column name="uuid" valueComputed="UUID()"/>
+            <column name="description" value="URL pattern to use for published relationship events. Default is /openmrs/ws/rest/v1/relationship/%s"/>
+        </insert>
+    </changeSet>
 
-INSERT INTO event_records(uuid, title, timestamp, uri, object, category, date_created) 
-SELECT UUID(), 'DrugOrder_Migrate', NOW(), null, CONCAT('/openmrs/ws/rest/v1/order/', o.uuid,'?v=full'), 'OpenSRP_DrugOrder',o.date_created 
-FROM orders o JOIN order_type ot ON o.order_type_id=ot.order_type_id WHERE ot.name IN ('drug order', 'drug_order', 'drug-order', 'drugorder'); 
-        </sql>
-	</changeSet>
-	
+    <changeSet id="20160705-1120" context="setup" author="angshu">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists columnName="tags" tableName="event_records_queue"/>
+            </not>
+        </preConditions>
+        <comment>Creating column tags for queue table. Each event can be tagged with multiple tags; as comma separated strings</comment>
+        <addColumn tableName="event_records_queue">
+            <column name="tags" type="varchar(255)"></column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20160705-1130" context="setup" author="angshu">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists columnName="tags" tableName="event_records"/>
+            </not>
+        </preConditions>
+        <comment>Creating column tags for event_records table. Each event can be tagged with multiple tags; as comma separated strings</comment>
+        <addColumn tableName="event_records">
+            <column name="tags" type="varchar(255)"></column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20160713-1978-1" author="Pankaj/Koushik">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*) FROM global_property where property = 'atomfeed.publish.eventsForPatientProgramStateChange'
+            </sqlCheck>
+        </preConditions>
+        <comment>Adding global property to act as switch for raising program events</comment>
+        <insert tableName="global_property">
+            <column name="property" value="atomfeed.publish.eventsForPatientProgramStateChange"/>
+            <column name="property_value" value=""/>
+            <column name="uuid" valueComputed="UUID()"/>
+            <column name="description" value="If set true, events related to program changes are published"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="20160713-1978-2" author="Pankaj/Koushik">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*) FROM global_property where property = 'atomfeed.event.urlPatternForProgramStateChange'
+            </sqlCheck>
+        </preConditions>
+        <comment>Adding global property to specify the URL pattern for published program events</comment>
+        <insert tableName="global_property">
+            <column name="property" value="atomfeed.event.urlPatternForProgramStateChange"/>
+            <column name="property_value" value=""/>
+            <column name="uuid" valueComputed="UUID()"/>
+            <column name="description" value="URL pattern to use for published program events. Default is /openmrs/ws/rest/v1/programenrollment/{uuid}?v=full"/>
+        </insert>
+    </changeSet>
+
 </databaseChangeLog>
