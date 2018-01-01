@@ -46,9 +46,9 @@
 	</modules>
 	
 	<properties>
-		<openMRSVersion>1.9.7</openMRSVersion>
+		<openMRSVersion>2.0.1</openMRSVersion>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <atomfeed.version>1.9.1</atomfeed.version>
+        <atomfeed.version>1.9.4</atomfeed.version>
 	</properties>
 
 	<dependencyManagement>
@@ -57,6 +57,12 @@
                 <groupId>org.ict4h</groupId>
                 <artifactId>atomfeed-server</artifactId>
                 <version>${atomfeed.version}</version>
+                <exclusions>
+			        <exclusion>  <!-- declare the exclusion here -->
+			          <groupId>javax.persistence</groupId>
+			          <artifactId>persistence-api</artifactId>
+			        </exclusion>
+			    </exclusions> 
             </dependency>
 
 			<dependency>

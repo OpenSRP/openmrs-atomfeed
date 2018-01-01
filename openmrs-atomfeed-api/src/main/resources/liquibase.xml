@@ -21,7 +21,7 @@
             <!-- Change to CLOB -->
             <column name="object" type="varchar(1000)"/>
             <column name="category" type="varchar(255)"/>
-            <column name="date_created" type="TIMESTAMP" />
+            <column name="date_created" type="TIMESTAMP" defaultValueDate="CURRENT_TIMESTAMP"/>
         </createTable>
     </changeSet>
     <changeSet author="maimoonak" id="opensrp-atomfeed-20160719-2">
